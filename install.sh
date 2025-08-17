@@ -53,3 +53,5 @@ fi
 echo "✅ $APP_NAME installed successfully!"
 echo "You can manually start it with:"
 echo "   $VENV_DIR/bin/python $INSTALL_DIR/hyprsunset-tray.py"
+
+$VENV_DIR/bin/python $INSTALL_DIR/hyprsunset-tray.py &
