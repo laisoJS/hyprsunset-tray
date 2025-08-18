@@ -194,14 +194,14 @@ class HyprsunsetTray(QSystemTrayIcon):
         if QIcon.hasThemeIcon(icon_name):
             return QIcon.fromTheme(icon_name)
 
-        color = QColor("#ffcc00" if running else "#ffffff")
+        color = QColor(Qt.GlobalColor.yellow if running else Qt.GlobalColor.white)
         pm = QPixmap(32, 32)
         pm.fill(Qt.GlobalColor.transparent)
 
         painter = QPainter(pm)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setBrush(color)
-        painter.drawEllipse(4, 4, 24, 24)
+        painter.drawEllipse(1, 1, 30, 30)
         painter.end()
 
         return QIcon(pm)
