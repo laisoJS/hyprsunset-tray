@@ -101,7 +101,7 @@ class TempDialog(QWidget):
         super().__init__(parent)
         self.controller = controller
         self.setWindowTitle("Hyprsunset Temperature")
-        self.setWindowFlags(Qt.WindowType.Tool | Qt.WindowType.FramelessWindowHint)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setFixedSize(300, 90)
 
         self._pending = controller.temperature
@@ -112,13 +112,14 @@ class TempDialog(QWidget):
         self.slider = QSlider(Qt.Orientation.Horizontal)
         self.slider.setRange(MIN_TEMP, MAX_TEMP)
         self.slider.setSingleStep(STEP)
+        self.slider.setPageStep(STEP)
         self.slider.setValue(self._pending)
         self.label = QLabel(f"{self._pending}K")
 
         layout.addWidget(QLabel("Temperature:"))
         layout.addWidget(self.slider)
         layout.addWidget(self.label)
-
+        
         self.slider.valueChanged.connect(lambda v: self.label.setText(f"{v}K"))
         self.slider.valueChanged.connect(lambda v: setattr(self, "_pending", v))
     def closeEvent(self, a0) -> None:
