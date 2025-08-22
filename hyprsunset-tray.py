@@ -113,15 +113,36 @@ class TempDialog(QWidget):
         self.slider.setRange(MIN_TEMP, MAX_TEMP)
         self.slider.setSingleStep(STEP)
         self.slider.setPageStep(STEP)
-        self.slider.setValue(self._pending)
+        self.slider.setValue(self._to_slider_value(self._pending))
         self.label = QLabel(f"{self._pending}K")
 
         layout.addWidget(QLabel("Temperature:"))
         layout.addWidget(self.slider)
         layout.addWidget(self.label)
+
+        self.slider.valueChanged.connect(self._on_slider_changed)
         
-        self.slider.valueChanged.connect(lambda v: self.label.setText(f"{v}K"))
-        self.slider.valueChanged.connect(lambda v: setattr(self, "_pending", v))
+        # self.slider.valueChanged.connect(lambda v: self.label.setText(f"{v}K"))
+        # self.slider.valueChanged.connect(lambda v: setattr(self, "_pending", v))
+        
+    def _to_slider_value(self, temperature: int) -> int:
+        return MAX_TEMP + MIN_TEMP - temperature
+
+    def _from_slider_value(self, slider_val: int) -> int:
+        return MAX_TEMP + MIN_TEMP - slider_val
+
+    def _on_slider_changed(self, slider_val: int) -> None:
+        snapped_value = round(slider_val / STEP) * STEP
+        if snapped_value != slider_val:
+            self.slider.blockSignals(True)
+            self.slider.setValue(snapped_value)
+            self.slider.blockSignals(False)
+            slider_val = snapped_value
+
+        temp = self._from_slider_value(slider_val)
+        self._pending = temp
+        self.label.setText(f"{temp}K")
+
     def closeEvent(self, a0) -> None:
         self.controller.set_temperature(self._pending)
         return super().closeEvent(a0)
